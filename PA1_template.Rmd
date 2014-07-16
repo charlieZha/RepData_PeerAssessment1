@@ -2,15 +2,39 @@
 
 
 ## Loading and preprocessing the data
+### Loading the data
+```{r echo=TRUE}
+data<-read.csv("activity.csv")
+```
 
+### Preprocessing the data
+```{r echo=TRUE}
+data$date<-as.Date(data$date, format="%Y-%m-%d")
+total<-aggregate(data$steps, by=list(data$date), sum)
+names(total)[1]<-"daily"
+names(total)[2]<-"steps"
+x<-aggregate(data$steps, by=list(data$interval), sum, na.rm=T, na.action=NULL)
+names(x)[1]<-"interval"
+names(x)[2]<-"steps"
+y<-aggregate(data$steps, by=list(data$interval),mean, na.rm=T, na.action=NULL)
+names(y)[1]<-"interval"
+names(y)[2]<-"mean"
+```
 
 
 ## What is mean total number of steps taken per day?
+```{r echo=TRUE}
+hist(total$steps, main="Total number of steps per day", xlab="total steps per day")
 
+mean(total$steps, na.rm=T)
+```
 
 
 ## What is the average daily activity pattern?
-
+```{r echo=TRUE}
+plot(y$interval, y$mean, type="n", main="Daily Activity Pattern", xlab="5 mins interval", ylab="Average steps")
+lines(y$interval, y$mean, type="l")
+```
 
 
 ## Imputing missing values
